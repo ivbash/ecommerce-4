@@ -6,7 +6,7 @@ import { cn } from '@/shared/utils/css';
 
 export function Header() {
   return (
-    <header className="border-b border-border">
+    <header className="sticky top-0 z-10 border-b border-border bg-background">
       <Container className="flex flex-wrap items-center gap-y-7 py-3.5 sm:gap-x-7 sm:gap-y-0">
         <Logo />
         <MainNav />
