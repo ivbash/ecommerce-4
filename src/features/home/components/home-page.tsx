@@ -1,4 +1,7 @@
 import { Filters } from './filters';
+import { ProductCount } from './product-count';
+import { ProductsHeader } from './products-header';
+import { Sorting } from './sorting';
 import { Special } from './special';
 
 export function HomePage() {
@@ -8,7 +11,12 @@ export function HomePage() {
         <Filters />
         <Special />
       </aside>
-      <div className="grow space-y-6">products</div>
+      <div className="grow space-y-6">
+        <ProductsHeader>
+          <ProductCount count={8} />
+          <Sorting />
+        </ProductsHeader>
+      </div>
     </div>
   );
 }
