@@ -4,6 +4,14 @@ import { MinusIcon } from '@/shared/components/icons/minus-icon';
 import { PlusIcon } from '@/shared/components/icons/plus-icon';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardMedia } from '@/shared/components/ui/card';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselIndicator,
+  CarouselNext,
+  CarouselPrev,
+  CarouselSlide,
+} from '@/shared/components/ui/carousel';
 import type { Product } from '@/shared/types/product';
 import { cn } from '@/shared/utils/css';
 import { formatPrice } from '@/shared/utils/format';
@@ -13,20 +21,41 @@ export function ProductCard({ product }: { product: Product }) {
   const [count, setCount] = useState(0);
 
   return (
-    <Card className="group relative">
+    <Card className="group/card relative">
       <CardMedia>
-        <img
-          src={product.images[0]}
-          alt={product.model}
-          className="aspect-square w-full object-cover"
-        />
+        <Carousel className="group/carousel">
+          <CarouselContent>
+            {product.images.map((href, i) => (
+              <CarouselSlide key={href}>
+                <img
+                  src={href}
+                  alt={`Slide ${i + 1}`}
+                  className="aspect-square w-full object-cover"
+                />
+              </CarouselSlide>
+            ))}
+          </CarouselContent>
+          <CarouselPrev
+            className={cn(
+              'hidden group-hover/carousel:flex',
+              product.images.length < 2 && 'group-hover/carousel:hidden',
+            )}
+          />
+          <CarouselNext
+            className={cn(
+              'hidden group-hover/carousel:flex',
+              product.images.length < 2 && 'group-hover/carousel:hidden',
+            )}
+          />
+          <CarouselIndicator />
+        </Carousel>
       </CardMedia>
       <CardContent className="flex flex-col items-stretch">
         {product.isSpecialOffer && (
           <ProductCardSpecial className="absolute top-2 left-2" />
         )}
         <ProductCardFavorite
-          className="absolute top-2 right-2 hidden group-hover:flex"
+          className="absolute top-2 right-2 hidden group-hover/card:flex"
           favorite={favorite}
           onClick={() => setFavorite((f) => !f)}
         />
