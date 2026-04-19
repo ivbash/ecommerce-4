@@ -1,10 +1,13 @@
 import { HomePage } from '@/features/home';
 import { MainLayout } from '@/shared/components/layouts/main-layout';
+import { Provider } from './provider';
 
 export function App() {
   return (
-    <MainLayout>
-      <HomePage />
-    </MainLayout>
+    <Provider>
+      <MainLayout>
+        <HomePage />
+      </MainLayout>
+    </Provider>
   );
 }

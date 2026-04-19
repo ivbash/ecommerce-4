@@ -1,6 +1,8 @@
+import type { CategoryType } from './category-type';
+
 export type Product = {
   id: number;
-  category: 'tv' | 'phone' | 'laptop';
+  category: CategoryType;
   make: string;
   model: string;
   price: number;
