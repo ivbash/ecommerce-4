@@ -1,10 +1,5 @@
-import { products } from '@/data/products';
-import {
-  getMaxPrice,
-  getMinPrice,
-  getProductsByCategory,
-  getUniqueBrands,
-} from '../utils/filter';
+import type { Product } from '@/shared/types/product';
+import { getMaxPrice, getMinPrice, getUniqueBrands } from '../utils/filter';
 import { Filters } from './filters';
 import { ProductCard } from './product-card';
 import { ProductCount } from './product-count';
@@ -13,11 +8,10 @@ import { ProductsHeader } from './products-header';
 import { Sorting } from './sorting';
 import { Special } from './special';
 
-export function HomePage() {
-  const filteredProducts = getProductsByCategory(products, 'tv');
-  const brands = getUniqueBrands(filteredProducts);
-  const minPrice = getMinPrice(filteredProducts);
-  const maxPrice = getMaxPrice(filteredProducts);
+export function Catalog({ products }: { products: Product[] }) {
+  const brands = getUniqueBrands(products);
+  const minPrice = getMinPrice(products);
+  const maxPrice = getMaxPrice(products);
 
   return (
     <div className="flex flex-col items-stretch gap-6 lg:flex-row">
@@ -27,11 +21,11 @@ export function HomePage() {
       </aside>
       <div className="grow space-y-6">
         <ProductsHeader>
-          <ProductCount count={filteredProducts.length} />
+          <ProductCount count={products.length} />
           <Sorting />
         </ProductsHeader>
         <ProductsGrid>
-          {filteredProducts.map((product) => (
+          {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </ProductsGrid>
