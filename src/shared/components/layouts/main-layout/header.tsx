@@ -2,16 +2,18 @@ import { CartIcon } from '@/shared/components/icons/cart-icon';
 import { UserIcon } from '@/shared/components/icons/user-icon';
 import { Button } from '@/shared/components/ui/button';
 import { Container } from '@/shared/components/ui/container';
+import { categories } from '@/shared/config/categories';
 import { usePageType } from '@/shared/hooks/use-page-type';
 import type { CategoryType } from '@/shared/types/category-type';
 import { cn } from '@/shared/utils/css';
 
 export function Header() {
+  const { pageType } = usePageType();
   return (
     <header className="sticky top-0 z-10 border-b border-border bg-background">
       <Container className="flex flex-wrap items-center gap-y-7 py-3.5 sm:gap-x-7 sm:gap-y-0">
         <Logo />
-        <CatalogTabs />
+        {categories.includes(pageType) && <CatalogTabs />}
         <UserBlock />
       </Container>
     </header>
