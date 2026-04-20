@@ -3,10 +3,14 @@ import { PlusIcon } from '@/shared/components/icons/plus-icon';
 import { TrashIcon } from '@/shared/components/icons/trash-icon';
 import { Button } from '@/shared/components/ui/button';
 import { Item, ItemContent, ItemMedia } from '@/shared/components/ui/item';
+import { useCart } from '@/shared/hooks/use-cart';
 import type { Product } from '@/shared/types/product';
 import { formatPrice } from '@/shared/utils/format';
 
 export function CartItem({ product }: { product: Product }) {
+  const { cart, add, remove, removeOne } = useCart();
+  const count = cart[product.id];
+
   return (
     <Item>
       <ItemMedia>
@@ -31,6 +35,7 @@ export function CartItem({ product }: { product: Product }) {
             variant="ghost"
             size="icon"
             className="size-8 text-accent"
+            onClick={() => remove(product.id)}
           >
             <TrashIcon />
           </Button>
@@ -42,13 +47,19 @@ export function CartItem({ product }: { product: Product }) {
               variant="secondary"
               size="icon"
               className="size-8"
+              onClick={() => removeOne(product.id)}
             >
               <MinusIcon />
             </Button>
             <span className="text-center text-base font-medium min-[360px]:min-w-12">
-              1
+              {count}
             </span>
-            <Button type="button" size="icon" className="size-8">
+            <Button
+              type="button"
+              size="icon"
+              className="size-8"
+              onClick={() => add(product.id)}
+            >
               <PlusIcon />
             </Button>
           </div>

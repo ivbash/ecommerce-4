@@ -12,13 +12,15 @@ import {
   CarouselPrev,
   CarouselSlide,
 } from '@/shared/components/ui/carousel';
+import { useCart } from '@/shared/hooks/use-cart';
 import type { Product } from '@/shared/types/product';
 import { cn } from '@/shared/utils/css';
 import { formatPrice } from '@/shared/utils/format';
 
 export function ProductCard({ product }: { product: Product }) {
   const [favorite, setFavorite] = useState(false);
-  const [count, setCount] = useState(0);
+  const { cart, add, removeOne } = useCart();
+  const count = cart[product.id] ?? 0;
 
   return (
     <Card className="group/card relative">
@@ -74,16 +76,12 @@ export function ProductCard({ product }: { product: Product }) {
               type="button"
               variant="secondary"
               size="icon"
-              onClick={() => setCount((c) => c - 1)}
+              onClick={() => removeOne(product.id)}
             >
               <MinusIcon />
             </Button>
             <span>{count} in cart</span>
-            <Button
-              type="button"
-              size="icon"
-              onClick={() => setCount((c) => c + 1)}
-            >
+            <Button type="button" size="icon" onClick={() => add(product.id)}>
               <PlusIcon />
             </Button>
           </div>
@@ -91,7 +89,7 @@ export function ProductCard({ product }: { product: Product }) {
           <Button
             type="button"
             className="w-full"
-            onClick={() => setCount((c) => c + 1)}
+            onClick={() => add(product.id)}
           >
             Add to Cart
           </Button>
