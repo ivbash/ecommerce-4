@@ -1,3 +1,4 @@
+import { CartPage } from '@/features/cart';
 import {
   LaptopListingPage,
   PhoneListingPage,
@@ -13,6 +14,7 @@ export function Content() {
       {pageType === 'tv' && <TvListingPage />}
       {pageType === 'phone' && <PhoneListingPage />}
       {pageType === 'laptop' && <LaptopListingPage />}
+      {pageType === 'cart' && <CartPage />}
     </>
   );
 }
