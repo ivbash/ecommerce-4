@@ -1,8 +1,10 @@
 import { CartIcon } from '@/shared/components/icons/cart-icon';
 import { UserIcon } from '@/shared/components/icons/user-icon';
+import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Container } from '@/shared/components/ui/container';
 import { categories } from '@/shared/config/categories';
+import { useCart } from '@/shared/hooks/use-cart';
 import { usePageType } from '@/shared/hooks/use-page-type';
 import type { CategoryType } from '@/shared/types/category-type';
 import { cn } from '@/shared/utils/css';
@@ -77,20 +79,29 @@ function CatalogTabsLink({
 
 function UserBlock() {
   const { setPageType } = usePageType();
+  const { cart } = useCart();
+  const cartProductCount = Object.values(cart).reduce(
+    (sum, count) => sum + count,
+    0,
+  );
 
   return (
     <div className="ml-auto flex gap-4">
       <Button
         as="a"
+        href="#"
         variant="ghost"
         size="icon"
-        href="#"
+        className="relative"
         onClick={(e) => {
           e.preventDefault();
           setPageType('cart');
         }}
       >
         <CartIcon />
+        {!!cartProductCount && (
+          <Badge className="absolute -top-1 -right-1">{cartProductCount}</Badge>
+        )}
       </Button>
       <Button as="a" variant="ghost" size="icon" href="#">
         <UserIcon />
