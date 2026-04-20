@@ -1,20 +1,40 @@
-import { createContext, useContext, useState } from 'react';
-import type { Cart } from '@/shared/types/cart';
-import type { PageType } from '@/shared/types/page-type';
+import { createContext, useCallback, useContext, useState } from 'react';
+import {
+  loadCart,
+  loadPageType,
+  saveCart,
+  savePageType,
+} from '@/data/session-storage';
 
 export const GlobalStoreContext = createContext<ReturnType<
   typeof useGlobalStoreState
 > | null>(null);
 
 export function useGlobalStoreState() {
-  const [pageType, setPageType] = useState<PageType>('tv');
-  const [cart, setCart] = useState<Cart>({});
+  const [pageType, setPageType] = useState(() => loadPageType());
+  const [cart, setCart] = useState(() => loadCart());
+
+  const setPageTypeInternal: typeof setPageType = useCallback(
+    (pt) => {
+      savePageType(typeof pt === 'function' ? pt(pageType) : pt);
+      setPageType(pt);
+    },
+    [pageType],
+  );
+
+  const setCartInternal: typeof setCart = useCallback(
+    (c) => {
+      saveCart(typeof c === 'function' ? c(cart) : c);
+      setCart(c);
+    },
+    [cart],
+  );
 
   return {
     pageType,
-    setPageType,
+    setPageType: setPageTypeInternal,
     cart,
-    setCart,
+    setCart: setCartInternal,
   };
 }
 
