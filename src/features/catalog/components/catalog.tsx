@@ -44,7 +44,7 @@ export function Catalog({ products }: { products: Product[] }) {
       </aside>
       <div className="grow space-y-6">
         <ProductsHeader>
-          <ProductCount count={products.length} />
+          <ProductCount count={filteredProducts.length} />
           <Sorting value={sorting} onChange={(value) => setSorting(value)} />
         </ProductsHeader>
         <ProductsGrid>
