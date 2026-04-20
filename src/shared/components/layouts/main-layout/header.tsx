@@ -21,8 +21,16 @@ export function Header() {
 }
 
 function Logo() {
+  const { setPageType } = usePageType();
   return (
-    <a href="/tv" className="block text-xl font-medium sm:text-2xl">
+    <a
+      href="/tv"
+      className="block text-xl font-medium sm:text-2xl"
+      onClick={(e) => {
+        e.preventDefault();
+        setPageType('tv');
+      }}
+    >
       TechStore
     </a>
   );
