@@ -1,6 +1,6 @@
 import type { Product } from '@/shared/types/product';
 
-export function getProductsByCategory(
+export function filterProductsByCategory(
   products: Product[],
   category: Product['category'],
 ) {
