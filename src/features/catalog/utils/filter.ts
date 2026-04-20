@@ -28,3 +28,38 @@ export function getMinPrice(products: Product[]) {
 export function getMaxPrice(products: Product[]) {
   return products.reduce((maxPrice, { price }) => Math.max(price, maxPrice), 0);
 }
+
+export type FiltersData = {
+  brand: string;
+  minPrice: number;
+  maxPrice: number;
+};
+
+export const allBrands = 'All Brands';
+
+export function filterProducts(products: Product[], filters: FiltersData) {
+  const filteredProductsByBrand =
+    filters.brand === allBrands
+      ? [...products]
+      : filterProductsByBrand(products, filters.brand);
+
+  const filteredProducts = filterProductsByPrice(
+    filteredProductsByBrand,
+    filters.minPrice,
+    filters.maxPrice,
+  );
+
+  return filteredProducts;
+}
+
+export function filterProductsByBrand(products: Product[], brand: string) {
+  return products.filter((p) => p.brand === brand);
+}
+
+export function filterProductsByPrice(
+  products: Product[],
+  minPrice: number,
+  maxPrice: number,
+) {
+  return products.filter(({ price }) => price >= minPrice && price <= maxPrice);
+}
