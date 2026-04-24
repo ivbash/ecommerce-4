@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useShowingSpecial } from '@/shared/hooks/use-showing-special';
 import type { Product } from '@/shared/types/product';
 import {
   allBrands,
@@ -31,6 +32,8 @@ export function Catalog({ products }: { products: Product[] }) {
   const [sorting, setSorting] = useState('price-asc');
   sortByPrice(filteredProducts, sorting === 'price-desc');
 
+  const { isShow: isShowSpecial, hide: hideSpecial } = useShowingSpecial();
+
   return (
     <div className="flex flex-col items-stretch gap-6 lg:flex-row">
       <aside className="shrink-0 space-y-4 lg:w-[256px]">
@@ -40,7 +43,7 @@ export function Catalog({ products }: { products: Product[] }) {
           maxPrice={maxPrice}
           onFilter={(filters) => setFilters(filters)}
         />
-        <Special />
+        {isShowSpecial && <Special onClose={hideSpecial} />}
       </aside>
       <div className="grow space-y-6">
         <ProductsHeader>
