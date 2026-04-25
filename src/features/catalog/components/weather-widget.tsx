@@ -53,7 +53,7 @@ export function WeatherWidget({ onClose }: { onClose?: () => void }) {
         <>
           <WeatherBlock weather={weather} />
           {error === 'Weather' && (
-            <p className="text-xs">Не удалось получить данные</p>
+            <p className="text-xs text-red-500">Не удалось получить данные</p>
           )}
         </>
       )}
@@ -71,7 +71,7 @@ export function WeatherWidget({ onClose }: { onClose?: () => void }) {
           disabled={loading}
         />
         {fetchedCity && (
-          <p className="text-xs">
+          <p className="text-xs text-red-500">
             Не удалось получить данные для города {fetchedCity}
           </p>
         )}
