@@ -3,10 +3,12 @@ import { CrossIcon } from '@/shared/components/icons/cross-icon';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import type { Weather } from '../api/types';
-import { useWeather } from '../hooks/use-weather';
+import { useWeather, type GeoLocationParams } from '../hooks/use-weather';
+
+const defaultCity = 'Тюмень';
 
 export function WeatherWidget({ onClose }: { onClose?: () => void }) {
-  const [city, setCity] = useState('Тюмень');
+  const [city, setCity] = useState('');
   const [fetchedCity, setFetchedCity] = useState('');
   const wrongCitiesRef = useRef<string[]>([]);
 
@@ -23,8 +25,10 @@ export function WeatherWidget({ onClose }: { onClose?: () => void }) {
 
   const { weather, error, loading, fetchData } = useWeather();
 
-  const handleGeoLocationError = (city) => {
+  const handleGeoLocationError = (city: GeoLocationParams) => {
     setCity('');
+
+    if (typeof city !== 'string') return;
     setFetchedCity(city);
 
     if (!wrongCitiesRef.current.includes(city)) {
@@ -33,7 +37,20 @@ export function WeatherWidget({ onClose }: { onClose?: () => void }) {
   };
 
   useEffect(() => {
-    fetchData('Тюмень', handleGeoLocationError);
+    const geolocation = navigator.geolocation;
+    geolocation.getCurrentPosition(
+      ({ coords }) => {
+        fetchData(
+          { lat: coords.latitude, lon: coords.longitude },
+          handleGeoLocationError,
+          (city) => setCity(city),
+        );
+      },
+      () => {
+        setCity(defaultCity);
+        fetchData(defaultCity, handleGeoLocationError);
+      },
+    );
   }, [fetchData]);
 
   return (

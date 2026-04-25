@@ -1,8 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { fetchGeoLocation, fetchWeather } from '../api/client';
-import type { Weather } from '../api/types';
+import {
+  fetchGeoLocation,
+  fetchReverseGeoLocation,
+  fetchWeather,
+} from '../api/client';
+import type { GeoLocation, Weather } from '../api/types';
 
 export type WeatherError = 'GeoLocation' | 'Weather';
+
+export type GeoLocationParams = string | { lat: number; lon: number };
 
 export function useWeather() {
   const [weather, setWeather] = useState<Weather>(null);
@@ -11,7 +17,11 @@ export function useWeather() {
   const abortControllerRef = useRef<AbortController>(null);
 
   const fetchData = useCallback(
-    async (city: string, onError?: (city: string) => void) => {
+    async (
+      cityOrCoords: GeoLocationParams,
+      onError?: (cityOrCoords: GeoLocationParams) => void,
+      onFetchedGeoLocation?: (city: string) => void,
+    ) => {
       abortControllerRef.current?.abort('abort');
 
       setLoading(true);
@@ -24,10 +34,27 @@ export function useWeather() {
       let geoLocationSuccess = false;
       let weatherSuccess = false;
 
+      let city = cityOrCoords;
+
       try {
-        const geoLocation = await fetchGeoLocation({ signal, city });
-        if (!geoLocation) throw new Error();
+        let geoLocation: GeoLocation;
+
+        if (typeof cityOrCoords === 'string') {
+          geoLocation = await fetchGeoLocation({ signal, city: cityOrCoords });
+          if (!geoLocation) throw new Error();
+          city = cityOrCoords;
+        } else {
+          geoLocation = await fetchReverseGeoLocation({
+            signal,
+            lat: cityOrCoords.lat,
+            lon: cityOrCoords.lon,
+          });
+          if (!geoLocation) throw new Error();
+          city = geoLocation.local_names.ru ?? geoLocation.name;
+        }
+
         geoLocationSuccess = true;
+        onFetchedGeoLocation?.(city);
 
         const weather = await fetchWeather({
           signal,
