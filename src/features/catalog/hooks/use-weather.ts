@@ -44,6 +44,7 @@ export function useWeather() {
           setError('GeoLocation');
           onError?.(city);
         } else if (!weatherSuccess) {
+          setWeather(null);
           setError('Weather');
         }
       } finally {

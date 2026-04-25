@@ -34,6 +34,7 @@ export function Catalog({ products }: { products: Product[] }) {
   sortByPrice(filteredProducts, sorting === 'price-desc');
 
   const { isShow: isShowSpecial, hide: hideSpecial } = useShowingSpecial();
+  const [isShowWeather, setIsShowWeather] = useState(true);
 
   return (
     <div className="flex flex-col items-stretch gap-6 lg:flex-row">
@@ -45,7 +46,9 @@ export function Catalog({ products }: { products: Product[] }) {
           onFilter={(filters) => setFilters(filters)}
         />
         {isShowSpecial && <Special onClose={hideSpecial} />}
-        <WeatherWidget />
+        {isShowWeather && (
+          <WeatherWidget onClose={() => setIsShowWeather(false)} />
+        )}
       </aside>
       <div className="grow space-y-6">
         <ProductsHeader>

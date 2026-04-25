@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CrossIcon } from '@/shared/components/icons/cross-icon';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
+import type { Weather } from '../api/types';
 import { useWeather } from '../hooks/use-weather';
 
 export function WeatherWidget({ onClose }: { onClose?: () => void }) {
@@ -47,23 +48,68 @@ export function WeatherWidget({ onClose }: { onClose?: () => void }) {
         <CrossIcon />
       </Button>
       {loading ? (
-        'Loading...'
+        <WeatherSkeleton />
       ) : (
         <>
-          {weather && <div>{weather.main.temp}</div>}
-          {error === 'Weather' && <p>Не удалось получить данные</p>}
-          <Input type="text" value={city} onChange={handleCityChange} />
-          {fetchedCity && (
-            <p>Не удалось получить данные для города {fetchedCity}</p>
+          <WeatherBlock weather={weather} />
+          {error === 'Weather' && (
+            <p className="text-xs">Не удалось получить данные</p>
           )}
         </>
       )}
+      <Input
+        type="text"
+        className="mt-2 px-2 py-1.5 text-sm"
+        value={city}
+        onChange={handleCityChange}
+        disabled={loading}
+      />
+      {fetchedCity && (
+        <p className="text-xs">
+          Не удалось получить данные для города {fetchedCity}
+        </p>
+      )}
       <Button
         type="button"
+        className="mt-2 px-2 py-1 text-sm"
         onClick={() => fetchData(city, handleGeoLocationError)}
+        disabled={loading}
       >
         Получить погоду
       </Button>
     </div>
   );
+}
+
+function WeatherSkeleton() {
+  return (
+    <div className="animate-pulse space-y-1.5 py-1">
+      <div className="h-6 w-16 rounded-lg bg-secondary" />
+      <div className="h-3.5 w-32 rounded-lg bg-secondary" />
+    </div>
+  );
+}
+
+function WeatherBlock({ weather }: { weather: Weather | null }) {
+  if (!weather) {
+    return (
+      <div>
+        <div className="text-2xl font-medium">-- °C</div>
+      </div>
+    );
+  }
+
+  const temp = kelvinToCelsius(weather.main.temp).toFixed(1);
+  const feelsLike = kelvinToCelsius(weather.main.feels_like).toFixed(1);
+
+  return (
+    <div>
+      <div className="text-2xl font-medium">{temp} °C</div>
+      <div>Ощущается: {feelsLike} °C</div>
+    </div>
+  );
+}
+
+function kelvinToCelsius(temp) {
+  return temp - 273.15;
 }
