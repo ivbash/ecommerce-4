@@ -57,26 +57,32 @@ export function WeatherWidget({ onClose }: { onClose?: () => void }) {
           )}
         </>
       )}
-      <Input
-        type="text"
-        className="mt-2 px-2 py-1.5 text-sm"
-        value={city}
-        onChange={handleCityChange}
-        disabled={loading}
-      />
-      {fetchedCity && (
-        <p className="text-xs">
-          Не удалось получить данные для города {fetchedCity}
-        </p>
-      )}
-      <Button
-        type="button"
-        className="mt-2 px-2 py-1 text-sm"
-        onClick={() => fetchData(city, handleGeoLocationError)}
-        disabled={loading}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          fetchData(city, handleGeoLocationError);
+        }}
       >
-        Получить погоду
-      </Button>
+        <Input
+          type="text"
+          className="mt-2 px-2 py-1.5 text-sm"
+          value={city}
+          onChange={handleCityChange}
+          disabled={loading}
+        />
+        {fetchedCity && (
+          <p className="text-xs">
+            Не удалось получить данные для города {fetchedCity}
+          </p>
+        )}
+        <Button
+          type="submit"
+          className="mt-2 px-2 py-1 text-sm"
+          disabled={loading}
+        >
+          Получить погоду
+        </Button>
+      </form>
     </div>
   );
 }
