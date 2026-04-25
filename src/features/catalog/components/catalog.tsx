@@ -16,6 +16,7 @@ import { ProductsGrid } from './products-grid';
 import { ProductsHeader } from './products-header';
 import { Sorting } from './sorting';
 import { Special } from './special';
+import { WeatherWidget } from './weather-widget';
 
 export function Catalog({ products }: { products: Product[] }) {
   const brands = [allBrands, ...getUniqueBrands(products)];
@@ -44,6 +45,7 @@ export function Catalog({ products }: { products: Product[] }) {
           onFilter={(filters) => setFilters(filters)}
         />
         {isShowSpecial && <Special onClose={hideSpecial} />}
+        <WeatherWidget />
       </aside>
       <div className="grow space-y-6">
         <ProductsHeader>
