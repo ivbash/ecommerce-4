@@ -1,5 +1,7 @@
 import type { GeoLocation, Weather } from './types';
 
+const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
+
 export async function fetchGeoLocation({
   signal,
   city,
@@ -8,7 +10,7 @@ export async function fetchGeoLocation({
   city: string;
 }) {
   const geoLocations = await get<GeoLocation[]>(
-    `http://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=1&appid=d2b13ccd7a446c2b7246b3d029f12ab9`,
+    `http://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=1&appid=${apiKey}`,
     signal,
   );
 
@@ -25,7 +27,7 @@ export async function fetchWeather({
   lon: number;
 }) {
   const weather = await get<Weather>(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&appid=d2b13ccd7a446c2b7246b3d029f12ab9`,
+    `https://api.openweathermap.org/data/2.5/weather?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&appid=${apiKey}`,
     signal,
   );
 
