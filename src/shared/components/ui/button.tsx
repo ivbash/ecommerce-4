@@ -29,7 +29,7 @@ export function Button<T extends React.ElementType = 'button'>({
   return (
     <Component
       className={cn(
-        'inline-flex items-center justify-center rounded-lg border text-base font-medium transition-opacity hover:opacity-80',
+        'inline-flex items-center justify-center rounded-lg border text-base font-medium transition-opacity hover:opacity-80 disabled:opacity-50',
         variants[variant],
         sizes[size],
         className,

@@ -11,30 +11,17 @@ export const GlobalStoreContext = createContext<ReturnType<
 > | null>(null);
 
 export function useGlobalStoreState() {
-  const [pageType, setPageType] = useState(() => loadPageType());
-  const [cart, setCart] = useState(() => loadCart());
-
-  const setPageTypeInternal: typeof setPageType = useCallback(
-    (pt) => {
-      savePageType(typeof pt === 'function' ? pt(pageType) : pt);
-      setPageType(pt);
-    },
-    [pageType],
-  );
-
-  const setCartInternal: typeof setCart = useCallback(
-    (c) => {
-      saveCart(typeof c === 'function' ? c(cart) : c);
-      setCart(c);
-    },
-    [cart],
-  );
+  const [pageType, setPageType] = useSyncState(loadPageType, savePageType);
+  const [cart, setCart] = useSyncState(loadCart, saveCart);
+  const [showSpecial, setShowSpecial] = useState(true);
 
   return {
     pageType,
-    setPageType: setPageTypeInternal,
+    setPageType,
     cart,
-    setCart: setCartInternal,
+    setCart,
+    showSpecial,
+    setShowSpecial,
   };
 }
 
@@ -48,4 +35,28 @@ export function useGlobalStore() {
   }
 
   return context;
+}
+
+type JSONValue =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: JSONValue }
+  | JSONValue[];
+
+function useSyncState<T extends JSONValue>(
+  initialState: () => T,
+  callback: (state: T) => void,
+) {
+  const [state, setState] = useState(initialState);
+  const setStateInternal = useCallback(
+    (s) => {
+      callback(typeof s === 'function' ? s(state) : s);
+      setState(s);
+    },
+    [callback, state],
+  ) satisfies typeof setState;
+
+  return [state, setStateInternal] as const;
 }
