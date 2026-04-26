@@ -34,27 +34,21 @@ export function useWeather() {
       let geoLocationSuccess = false;
       let weatherSuccess = false;
 
-      let city = cityOrCoords;
-
       try {
         let geoLocation: GeoLocation;
 
         if (typeof cityOrCoords === 'string') {
           geoLocation = await fetchGeoLocation({ signal, city: cityOrCoords });
-          if (!geoLocation) throw new Error();
-          city = cityOrCoords;
         } else {
           geoLocation = await fetchReverseGeoLocation({
             signal,
             lat: cityOrCoords.lat,
             lon: cityOrCoords.lon,
           });
-          if (!geoLocation) throw new Error();
-          city = geoLocation.local_names.ru ?? geoLocation.name;
         }
 
+        if (!geoLocation) throw new Error();
         geoLocationSuccess = true;
-        onFetchedGeoLocation?.(city);
 
         const weather = await fetchWeather({
           signal,
@@ -63,14 +57,18 @@ export function useWeather() {
         });
         weatherSuccess = true;
 
+        onFetchedGeoLocation?.(weather.name);
         setWeather(weather);
       } catch (error) {
         if (error === 'abort') return;
 
         if (!geoLocationSuccess) {
           setError('GeoLocation');
-          onError?.(city);
+          onError?.(cityOrCoords);
         } else if (!weatherSuccess) {
+          onFetchedGeoLocation?.(
+            typeof cityOrCoords === 'string' ? cityOrCoords : '',
+          );
           setWeather(null);
           setError('Weather');
         }

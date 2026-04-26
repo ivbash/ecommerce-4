@@ -78,7 +78,7 @@ export function WeatherWidget({ onClose }: { onClose?: () => void }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          fetchData(city, handleGeoLocationError);
+          fetchData(city, handleGeoLocationError, (city) => setCity(city));
         }}
       >
         <Input
