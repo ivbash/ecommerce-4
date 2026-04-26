@@ -29,7 +29,11 @@ export function WeatherWidget({ onClose }: { onClose?: () => void }) {
   const handleGeoLocationError = (city: GeoLocationParams) => {
     setCity('');
 
-    if (typeof city !== 'string') return;
+    if (typeof city !== 'string') {
+      setFetchedCity(' ');
+      return;
+    }
+
     setFetchedCity(city);
 
     if (!wrongCitiesRef.current.includes(city)) {
