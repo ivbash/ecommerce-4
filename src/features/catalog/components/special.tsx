@@ -15,7 +15,7 @@ export function Special({ onClose }: { onClose?: () => void }) {
         type="button"
         variant="ghost"
         size="icon-xs"
-        className="absolute top-2 right-2"
+        className="absolute top-2 right-2 z-10"
         onClick={onClose}
       >
         <CrossIcon />
