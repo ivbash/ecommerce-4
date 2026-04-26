@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CrossIcon } from '@/shared/components/icons/cross-icon';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
+import { Modal } from '@/shared/components/ui/modal';
 import type { Weather } from '../api/types';
 import { useWeather, type GeoLocationParams } from '../hooks/use-weather';
 
@@ -114,6 +115,9 @@ function WeatherSkeleton() {
 }
 
 function WeatherBlock({ weather }: { weather: Weather | null }) {
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const handleModalClose = useCallback(() => setIsOpenModal(false), []);
+
   if (!weather) {
     return (
       <div>
@@ -124,15 +128,44 @@ function WeatherBlock({ weather }: { weather: Weather | null }) {
 
   const temp = kelvinToCelsius(weather.main.temp).toFixed(1);
   const feelsLike = kelvinToCelsius(weather.main.feels_like).toFixed(1);
+  const description = weather.weather[0]?.description ?? '';
+  const city = weather.name;
+  const humidity = weather.main.humidity;
+  const pressure = hectoPascalToMillimetreOfMercury(
+    weather.main.pressure,
+  ).toFixed(0);
 
   return (
     <div>
       <div className="text-2xl font-medium">{temp} °C</div>
-      <div>Ощущается: {feelsLike} °C</div>
+      <div className="flex items-center gap-3">
+        <span>Ощущается: {feelsLike} °C</span>
+        <Button
+          type="button"
+          variant="secondary"
+          className="px-1 py-px text-xs"
+          onClick={() => setIsOpenModal(true)}
+        >
+          Подробно
+        </Button>
+        <Modal open={isOpenModal} onClose={handleModalClose}>
+          <h2 className="text-2xl font-medium">Погода</h2>
+          <h3 className="mb-1.5 text-lg text-muted">{city}</h3>
+          <p className="text-xl font-medium">{temp} °C</p>
+          <p className="mb-1 text-lg font-medium">{description}</p>
+          <p>Ощущается: {feelsLike} °C</p>
+          <p>Влажность: {humidity}%</p>
+          <p>Давление: {pressure} мм рт.ст.</p>
+        </Modal>
+      </div>
     </div>
   );
 }
 
 function kelvinToCelsius(temp) {
   return temp - 273.15;
+}
+
+function hectoPascalToMillimetreOfMercury(pres) {
+  return pres / 1.333;
 }

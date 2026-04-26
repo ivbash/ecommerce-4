@@ -44,7 +44,7 @@ export async function fetchWeather({
   lon: number;
 }) {
   const weather = await get<Weather>(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&appid=${encodeURIComponent(apiKey)}`,
+    `https://api.openweathermap.org/data/2.5/weather?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&lang=ru&appid=${encodeURIComponent(apiKey)}`,
     signal,
   );
 
